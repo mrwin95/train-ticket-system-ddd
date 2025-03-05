@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: train-ticket-system
+server:
+  port: 6677
