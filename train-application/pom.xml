@@ -9,7 +9,6 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>win.trainticket.ddd</groupId>
     <artifactId>train-application</artifactId>
 
     <properties>
@@ -18,4 +17,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>win.trainticket.ddd</groupId>
+            <artifactId>train-domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>win.trainticket.ddd</groupId>
+            <artifactId>train-infrastructure</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
