@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>train-controller</artifactId>
+    <artifactId>train-domain</artifactId>
 
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
@@ -17,11 +17,4 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>win.trainticket.ddd</groupId>
-            <artifactId>train-application</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
 </project>
