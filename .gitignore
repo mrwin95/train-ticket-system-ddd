@@ -37,3 +37,5 @@ build/
 ### Mac OS ###
 .DS_Store!/train-start/target/
 ###!/train-controller/target/
+/benchmark/
+/.idea/

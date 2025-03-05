@@ -19,4 +19,10 @@ public class HiController {
     public String hello() {
         return eventAppService.sayHi("Win");
     }
+
+    @GetMapping("/hi/v1")
+    public String sayHi() {
+        return eventAppService.sayHi("Rose");
+    }
+
 }

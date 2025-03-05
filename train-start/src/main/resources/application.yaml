@@ -3,3 +3,6 @@ spring:
     name: train-ticket-system
 server:
   port: 6677
+  tomcat:
+    threads:
+      max: 10 # 200
