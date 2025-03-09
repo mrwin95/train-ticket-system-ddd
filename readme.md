@@ -19,3 +19,6 @@ echo "GET http://localhost:6677/ticket/1/detail/1" | vegeta attack -name=2000qps
 ## mysqld (7362)
 
 ## redis-exporter (763)
+
+## test performance wrk -t12 -c2000 -d2m http://localhost:6677/ticket/1/detail/1
+

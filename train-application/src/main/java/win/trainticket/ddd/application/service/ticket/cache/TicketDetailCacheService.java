@@ -1,5 +1,7 @@
 package win.trainticket.ddd.application.service.ticket.cache;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import win.trainticket.ddd.domain.model.entity.TicketDetail;
@@ -8,6 +10,7 @@ import win.trainticket.ddd.infra.cache.redis.RedisInfraService;
 import win.trainticket.ddd.infra.distributed.redisson.RedisDistributedLocker;
 import win.trainticket.ddd.infra.distributed.redisson.RedisDistributedService;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -21,6 +24,11 @@ public class TicketDetailCacheService {
     private final RedisDistributedService redisDistributedService;
 
     private final TicketDetailDomainService ticketDetailDomainService;
+
+    private final static Cache<Long, TicketDetail> localCache = CacheBuilder.newBuilder()
+            .initialCapacity(10)
+            .concurrencyLevel(10)
+            .expireAfterAccess(10, TimeUnit.MINUTES).build();
 
     public TicketDetailCacheService(RedisInfraService redisInfraService, RedisDistributedService redisDistributedService, TicketDetailDomainService ticketDetailDomainService) {
         this.redisInfraService = redisInfraService;
@@ -105,6 +113,78 @@ public class TicketDetailCacheService {
         }
 
     }
+
+    private TicketDetail getTicketDetailLocalCache(Long ticketId) {
+        try {
+            return localCache.getIfPresent(ticketId);
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public TicketDetail getTicketDetailDefaultCacheLocal(Long ticketId, Long version) {
+
+        //1. Get ticket from cache
+        TicketDetail ticketDetail =  getTicketDetailLocalCache(ticketId);// redisInfraService.getObject(getEventItemKey(ticketId), TicketDetail.class);
+        if (ticketDetail != null) {
+            log.info("From LOCAL CACHE: {}", ticketDetail);
+            return ticketDetail;
+        }
+
+        // get cache from redis
+        ticketDetail = redisInfraService.getObject(getEventItemKey(ticketId), TicketDetail.class);
+        if (ticketDetail != null) {
+            log.info("From DISTRIBUTED CACHE: {}", ticketDetail);
+            localCache.put(ticketId, ticketDetail);
+            return ticketDetail;
+        }
+
+
+        // 2. process no cache
+
+        RedisDistributedLocker locker = redisDistributedService.getDistributedLock("PRO_LOCK_KEY_ITEM" + ticketDetail);
+        try {
+            // create lock
+
+            boolean isLock = locker.tryLock(1, 5, TimeUnit.SECONDS);
+            if (!isLock) {
+                log.info("Lock wait item: {}, version: {}", ticketId, version);
+                return ticketDetail;
+            }
+            // Get cache
+
+            ticketDetail = redisInfraService.getObject(getEventItemKey(ticketId), TicketDetail.class);
+            // Yes
+
+            if (ticketDetail != null) {
+                log.info("From cache exits: {}", ticketDetail);
+                localCache.put(ticketId, ticketDetail);
+                return ticketDetail;
+            }
+
+            // if still cannot , get from cache
+
+            ticketDetail = ticketDetailDomainService.getTicketDetailById(ticketId);
+            log.info("From dbs exits: {}", ticketDetail);
+            if (ticketDetail == null) {
+                log.info("Ticket not exist: {}", ticketDetail);
+                redisInfraService.setObject(getEventItemKey(ticketId), ticketDetail);
+                localCache.put(ticketId, null);
+                return ticketDetail;
+            }
+
+            // if exist set cache
+
+            redisInfraService.setObject(getEventItemKey(ticketId), ticketDetail);
+            localCache.put(ticketId, ticketDetail);
+            return ticketDetail;
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {
+            locker.unlock();
+        }
+
+    }
+
     private String getEventItemKey(Long itemKey) {
         return "PROD_TICKET:ITEM:" + itemKey;
     }

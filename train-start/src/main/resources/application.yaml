@@ -37,6 +37,9 @@ spring:
           min-idle: 0
           max-wait: -1ms
       connect-timeout: 30000
+  threads:
+    virtual:
+      enabled: true
 # improvement tomcat
 server:
   port: 6677
@@ -47,6 +50,7 @@ server:
     max-connections: 8192 #max number of connection that the server accepts to process in given time
     accept-count: 100 #max queue length
     connection-timeout: 2000
+
 
 
 resilience4j:
