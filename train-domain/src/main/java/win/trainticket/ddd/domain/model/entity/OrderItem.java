@@ -7,10 +7,10 @@ import jakarta.persistence.Id;
 /**
  * Problematic N+1 query
  */
-@Entity
+//@Entity
 public class OrderItem {
-    @Id
-    @GeneratedValue
-    private Long id;
+//    @Id
+//    @GeneratedValue
+//    private Long id;
 
 }

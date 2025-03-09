@@ -8,12 +8,23 @@ spring:
       idle-timeout: 30000
       connection-timeout: 2000
       max-lifetime: 1800000
-    url: jdbc:mysql://localhost:3316/vetautet
+    url: jdbc:mysql://localhost:3306/vetautet
     username: root
     password: root1234
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
-
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+    database: mysql
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  jackson:
+    serialization:
+      indent-output: true
 # improvement tomcat
 server:
   port: 6677
