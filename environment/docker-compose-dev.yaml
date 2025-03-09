@@ -105,6 +105,15 @@ services:
       - mysql
     networks:
       - pre-event-network
+
+  redis-exporter:
+    image: oliver006/redis_exporter
+    container_name: pre-event-redis-exporter
+    command: -redis.addr redis://redis:6379
+    ports:
+      - "9121:9121"
+    networks:
+      - pre-event-network
 networks:
   pre-event-network:
     driver: bridge
