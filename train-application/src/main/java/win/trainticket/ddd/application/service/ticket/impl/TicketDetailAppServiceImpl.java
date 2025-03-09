@@ -27,6 +27,7 @@ public class TicketDetailAppServiceImpl implements TicketDetailAppService {
     public TicketDetail getTicketDetailById(Long ticketId) {
         log.info("Implement application: {}", ticketId);
 //        return ticketDetailDomainService.getTicketDetailById(ticketId);
-        return ticketDetailCacheService.getTicketDetailCacheDefaultNormal(ticketId, System.currentTimeMillis());
+//        return ticketDetailCacheService.getTicketDetailCacheDefaultNormal(ticketId, System.currentTimeMillis());
+        return ticketDetailCacheService.getTicketDetailCacheDefaultVIP(ticketId, System.currentTimeMillis());
     }
 }

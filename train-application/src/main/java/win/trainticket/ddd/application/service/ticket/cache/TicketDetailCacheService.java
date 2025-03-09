@@ -5,6 +5,10 @@ import org.springframework.stereotype.Service;
 import win.trainticket.ddd.domain.model.entity.TicketDetail;
 import win.trainticket.ddd.domain.service.TicketDetailDomainService;
 import win.trainticket.ddd.infra.cache.redis.RedisInfraService;
+import win.trainticket.ddd.infra.distributed.redisson.RedisDistributedLocker;
+import win.trainticket.ddd.infra.distributed.redisson.RedisDistributedService;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -14,10 +18,13 @@ public class TicketDetailCacheService {
 
     private final RedisInfraService redisInfraService;
 
+    private final RedisDistributedService redisDistributedService;
+
     private final TicketDetailDomainService ticketDetailDomainService;
 
-    public TicketDetailCacheService(RedisInfraService redisInfraService, TicketDetailDomainService ticketDetailDomainService) {
+    public TicketDetailCacheService(RedisInfraService redisInfraService, RedisDistributedService redisDistributedService, TicketDetailDomainService ticketDetailDomainService) {
         this.redisInfraService = redisInfraService;
+        this.redisDistributedService = redisDistributedService;
         this.ticketDetailDomainService = ticketDetailDomainService;
     }
 
@@ -46,6 +53,58 @@ public class TicketDetailCacheService {
         return ticketDetail;
     }
 
+    public TicketDetail getTicketDetailCacheDefaultVIP(Long ticketId, Long version) {
+
+        //1. Get ticket from cache
+        TicketDetail ticketDetail = redisInfraService.getObject(getEventItemKey(ticketId), TicketDetail.class);
+        if (ticketDetail != null) {
+            log.info("From cache exits: {}", ticketDetail);
+            return ticketDetail;
+        }
+
+        // 2. process no cache
+
+        RedisDistributedLocker locker = redisDistributedService.getDistributedLock("PRO_LOCK_KEY_ITEM" + ticketDetail);
+        try {
+            // create lock
+
+            boolean isLock = locker.tryLock(1, 5, TimeUnit.SECONDS);
+            if (!isLock) {
+                log.info("Lock wait item: {}, version: {}", ticketId, version);
+                return ticketDetail;
+            }
+            // Get cache
+
+            ticketDetail = redisInfraService.getObject(getEventItemKey(ticketId), TicketDetail.class);
+            // Yes
+
+            if (ticketDetail != null) {
+                log.info("From cache exits: {}", ticketDetail);
+                return ticketDetail;
+            }
+
+            // if still cannot , get from cache
+
+            ticketDetail = ticketDetailDomainService.getTicketDetailById(ticketId);
+            log.info("From dbs exits: {}", ticketDetail);
+            if (ticketDetail == null) {
+                log.info("Ticket not exist: {}", ticketDetail);
+                redisInfraService.setObject(getEventItemKey(ticketId), ticketDetail);
+                return ticketDetail;
+            }
+
+            // if exist set cache
+
+            redisInfraService.setObject(getEventItemKey(ticketId), ticketDetail);
+
+            return ticketDetail;
+        }catch (Exception e) {
+            throw new RuntimeException(e);
+        }finally {
+            locker.unlock();
+        }
+
+    }
     private String getEventItemKey(Long itemKey) {
         return "PROD_TICKET:ITEM:" + itemKey;
     }
