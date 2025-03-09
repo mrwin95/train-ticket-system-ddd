@@ -25,6 +25,18 @@ spring:
   jackson:
     serialization:
       indent-output: true
+  data:
+    redis:
+      host: localhost
+      port: 6389
+      password: ""
+      lettuce:
+        pool:
+          max-idle: 8
+          max-active: 8
+          min-idle: 0
+          max-wait: -1ms
+      connect-timeout: 30000
 # improvement tomcat
 server:
   port: 6677

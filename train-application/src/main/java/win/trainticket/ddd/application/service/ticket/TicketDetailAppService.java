@@ -5,4 +5,6 @@ import win.trainticket.ddd.domain.model.entity.TicketDetail;
 public interface TicketDetailAppService {
 
     public TicketDetail getTicketDetailById(Long ticketId);
+
+
 }
