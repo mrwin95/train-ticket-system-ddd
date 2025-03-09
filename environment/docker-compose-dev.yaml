@@ -81,6 +81,30 @@ services:
       - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
     ports:
       - "9100:9100"
+
+  mysql-exporter:
+    image: prom/mysqld-exporter
+    container_name: pre-event-mysql-exporter
+    ports:
+      - "9114:9104"
+    command:
+      - '--collect.engine_innodb_status'
+      - '--collect.info_schema.processlist'
+      - '--collect.info_schema.tables'
+      - '--collect.info_schema.query_response_time'
+      - '--collect.perf_schema.file_events'
+      - '--collect.perf_schema.eventsstatements'
+      - '--collect.perf_schema.indexiowaits'
+      - '--collect.global_status'
+      - '--config.my-cnf=/etc/mysql/.my.cnf'
+    volumes:
+      - ./mysqld-exporter/.my.cnf:/etc/mysql/.my.cnf
+    environment:
+      - DATA_SOURCE_NAME=root:root1234@tcp(mysql:3306)/
+    depends_on:
+      - mysql
+    networks:
+      - pre-event-network
 networks:
   pre-event-network:
     driver: bridge

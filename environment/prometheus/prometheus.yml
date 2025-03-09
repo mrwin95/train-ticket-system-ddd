@@ -17,3 +17,9 @@ scrape_configs:
     scrape_interval: 15s
     static_configs:
       - targets: [ "host.docker.internal:9100" ]
+
+  - job_name: "banvetau-mysql-exporter"
+    scrape_interval: 15s
+    static_configs:
+      - targets: [ "host.docker.internal:9114" ]
+    metrics_path: "/metrics"

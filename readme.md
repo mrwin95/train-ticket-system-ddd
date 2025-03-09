@@ -15,3 +15,5 @@
 ## grafana board JVM (4701)
 echo "GET http://localhost:6677/ticket/1/detail/1" | vegeta attack -name=2000qps -duration=10s -rate=100 | tee benchmark/results_2000qps.bin | vegeta report
 ## node exporter (1860)
+
+## mysqld (7362)
