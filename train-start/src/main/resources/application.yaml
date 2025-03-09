@@ -1,11 +1,30 @@
 spring:
   application:
     name: train-ticket-system
+  datasource:
+    hikari:
+      maximum-pool-size: 20 # good number would be 30
+      minimum-idle: 5 # good number would be 10
+      idle-timeout: 30000
+      connection-timeout: 2000
+      max-lifetime: 1800000
+    url: jdbc:mysql://localhost:3316/vetautet
+    username: root
+    password: root1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+
+# improvement tomcat
 server:
   port: 6677
   tomcat:
     threads:
-      max: 10 # 200
+      max: 10 # a good number is 200
+      min-spare: 20 # number of worker thread
+    max-connections: 8192 #max number of connection that the server accepts to process in given time
+    accept-count: 100 #max queue length
+    connection-timeout: 2000
+
 
 resilience4j:
   ratelimiter:

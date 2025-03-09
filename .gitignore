@@ -39,3 +39,4 @@ build/
 ###!/train-controller/target/
 /benchmark/
 /.idea/
+/environment/data/
