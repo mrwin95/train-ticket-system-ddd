@@ -19,7 +19,7 @@ public class TicketDetailDomainServiceImpl implements TicketDetailDomainService 
     }
     @Override
     public TicketDetail getTicketDetailById(Long ticketId) {
-        log.info("Implement domain: {}", ticketId);
+//        log.info("Implement domain: {}", ticketId);
         return domainRepository.findById(ticketId).orElse(null);
     }
 }

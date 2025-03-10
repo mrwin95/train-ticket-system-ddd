@@ -2,7 +2,9 @@ package win.trainticket.ddd.application.service.ticket.cache;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import win.trainticket.ddd.domain.model.entity.TicketDetail;
 import win.trainticket.ddd.domain.service.TicketDetailDomainService;
@@ -14,9 +16,9 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@Slf4j
 public class TicketDetailCacheService {
 
+    private static final Logger log = LoggerFactory.getLogger(TicketDetailCacheService.class);
     // call redis cache
 
     private final RedisInfraService redisInfraService;

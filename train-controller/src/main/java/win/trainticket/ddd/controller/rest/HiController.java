@@ -2,7 +2,9 @@ package win.trainticket.ddd.controller.rest;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
-import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,9 +15,9 @@ import java.security.SecureRandom;
 
 @RestController
 @RequestMapping("/hello")
-@Slf4j
 public class HiController {
 
+    private static final Logger log = LoggerFactory.getLogger(HiController.class);
     private final EventAppService eventAppService;
 
     private static final SecureRandom random = new SecureRandom();

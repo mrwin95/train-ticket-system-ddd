@@ -1,6 +1,7 @@
 package win.trainticket.ddd.application.service.ticket.impl;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import win.trainticket.ddd.application.service.ticket.TicketDetailAppService;
 import win.trainticket.ddd.application.service.ticket.cache.TicketDetailCacheService;
@@ -8,9 +9,9 @@ import win.trainticket.ddd.domain.model.entity.TicketDetail;
 import win.trainticket.ddd.domain.service.TicketDetailDomainService;
 
 @Service
-@Slf4j
 public class TicketDetailAppServiceImpl implements TicketDetailAppService {
 
+    private static final Logger log = LoggerFactory.getLogger(TicketDetailAppServiceImpl.class);
     // Need call service detail domain
 
     private final TicketDetailDomainService ticketDetailDomainService;

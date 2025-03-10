@@ -22,3 +22,26 @@ echo "GET http://localhost:6677/ticket/1/detail/1" | vegeta attack -name=2000qps
 
 ## test performance wrk -t12 -c2000 -d2m http://localhost:6677/ticket/1/detail/1
 
+## Using Lombok Library With JDK 23
+
+<properties>
+	...
+	<java.version>23</java.version>
+	<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+	<maven.compiler.proc>full</maven.compiler.proc>
+</properties>
+<build>
+	<plugins>
+		...
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>${maven-compiler-plugin.version}</version>
+			<configuration>
+				<source>${java.version}</source>
+				<target>${java.version}</target>
+			</configuration>
+		</plugin>
+	</plugins>
+</build>
+

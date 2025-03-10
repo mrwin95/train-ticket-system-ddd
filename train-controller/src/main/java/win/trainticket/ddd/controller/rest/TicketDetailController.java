@@ -1,6 +1,7 @@
 package win.trainticket.ddd.controller.rest;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +13,9 @@ import win.trainticket.ddd.domain.model.entity.TicketDetail;
 
 @RestController
 @RequestMapping("/ticket")
-@Slf4j
 public class TicketDetailController {
 
+    private static final Logger log = LoggerFactory.getLogger(TicketDetailController.class);
     // Call service Application
 
     private final TicketDetailAppService ticketDetailAppService;
