@@ -76,4 +76,9 @@ public class RedisInfraServiceImpl implements RedisInfraService{
             log.error("set Objects Error: {} ", e.getMessage());
         }
     }
+
+    @Override
+    public void delete(String eventItemKey) {
+        redisTemplate.delete(eventItemKey);
+    }
 }

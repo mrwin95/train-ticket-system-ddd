@@ -31,4 +31,12 @@ public class TicketDetailController {
         log.info("params, HELLO MEMBER ticketId={}, detailId={}", ticketId, detailId);
         return ResultUtil.data(ticketDetailAppService.getTicketDetailById(ticketId));
     }
+
+    @GetMapping("/{ticketId}/detail/{detailId}/order")
+    public boolean placeOrderTicketByUser(
+            @PathVariable("ticketId") Long ticketId,
+            @PathVariable("detailId") Long detailId){
+        log.info("params, ticketId={}, detailId={}", ticketId, detailId);
+        return ticketDetailAppService.placeOrderTicketByUser(detailId);// true;//ResultUtil.data(ticketDetailAppService.getTicketDetailById(ticketId));
+    }
 }

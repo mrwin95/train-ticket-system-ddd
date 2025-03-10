@@ -38,6 +38,11 @@ public class TicketDetailCacheService {
         this.ticketDetailDomainService = ticketDetailDomainService;
     }
 
+    public boolean placeOrderByUser(Long ticketId) {
+        localCache.invalidate(ticketId);
+        redisInfraService.delete(getEventItemKey(ticketId));
+        return true;
+    }
     public TicketDetail getTicketDetailCacheDefaultNormal(Long ticketId, Long version) {
         // 1. Get Ticket detail from redis
 

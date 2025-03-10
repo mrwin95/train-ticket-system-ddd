@@ -6,5 +6,6 @@ public interface TicketDetailAppService {
 
     public TicketDetail getTicketDetailById(Long ticketId);
 
+    boolean placeOrderTicketByUser(Long id);
 
 }

@@ -32,4 +32,9 @@ public class TicketDetailAppServiceImpl implements TicketDetailAppService {
 //        return ticketDetailCacheService.getTicketDetailCacheDefaultVIP(ticketId, System.currentTimeMillis());
         return ticketDetailCacheService.getTicketDetailDefaultCacheLocal(ticketId, System.currentTimeMillis());
     }
+
+    @Override
+    public boolean placeOrderTicketByUser(Long id) {
+        return ticketDetailCacheService.placeOrderByUser(id);
+    }
 }
