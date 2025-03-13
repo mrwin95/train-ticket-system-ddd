@@ -22,6 +22,7 @@
             <groupId>win.trainticket.ddd</groupId>
             <artifactId>train-controller</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>

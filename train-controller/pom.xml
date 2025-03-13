@@ -22,6 +22,7 @@
             <groupId>win.trainticket.ddd</groupId>
             <artifactId>train-application</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

@@ -1,0 +1,7 @@
+train-start/target/
+train-application/target/
+train-controller/target/
+train-domain/target/
+train-infrastructure/target/
+.git
+.idea
